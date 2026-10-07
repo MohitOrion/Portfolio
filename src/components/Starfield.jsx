@@ -17,11 +17,11 @@ export default function Starfield() {
     const resize = () => {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
-      stars = Array.from({ length: 220 }, () => ({
+      stars = Array.from({ length: 200 }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
         r: Math.random() * 1.4 + 0.3,
-        depth: Math.random() * 0.8 + 0.2,
+        depth: Math.random() * 0.8,
         phase: Math.random() * Math.PI * 2,
         speed: Math.random() * 0.02 + 0.004,
       }));
