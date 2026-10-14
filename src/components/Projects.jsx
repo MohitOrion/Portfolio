@@ -19,7 +19,7 @@ const PROJECTS = [
     summary:
       "It's My personal Project show case site, shows my understanding of working of web application and github actions",
     image:
-      "../../public/Home_Page.png",
+      "https://raw.githubusercontent.com/MohitOrion/Portfolio/main/public/Home_Page.png",
     github: "https://github.com/MohitOrion/Projects/tree/main/Small%20Projects",
     demo: "https://mohitorion.github.io/Projects/",
   },
@@ -32,7 +32,7 @@ const PROJECTS = [
     summary:
       "This project analyzes customer shopping behavior using transactional data from 3,900 purchases across various product categories. The goal is to uncover insights into spending patterns, customer segments, product preferences, and subscription behavior to guide strategic business decisions.",
     image:
-      "../../public/Customers_Analytics.jpg",
+      "https://raw.githubusercontent.com/MohitOrion/Portfolio/main/public/Customers_Analytics.jpg",
     github: "https://github.com/MohitOrion/Projects/tree/main/Data-Analysis",
     demo: "https://docs.google.com/presentation/d/1DiZGOmRbsc9rOzNnwRAttsT5OmrF7IB-/edit?usp=sharing&ouid=108632968501610087936&rtpof=true&sd=true",
   },
