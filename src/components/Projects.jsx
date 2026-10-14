@@ -12,33 +12,33 @@ const TABS = [
 const PROJECTS = [
   {
     id: "proj-1",
-    title: "CosmoPulse — Real-time Analytics Platform",
+    title: "Project Show Case",
     cat: "web",
-    catLabel: "Full-Stack Web",
-    tech: ["React", "Node.js", "MongoDB", "FastAPI", "Tailwind"],
+    catLabel: "Web",
+    tech: ["HTML", "CSS", "JavaScript", "Github-Action", "Bootstrap"],
     summary:
-      "Full-stack dashboard serving real-time system metrics, automated telemetry analysis, and user management secured with JWT auth.",
+      "It's My personal Project show case site, shows my understanding of working of web application and github actions",
     image:
-      "https://images.unsplash.com/photo-1720962158937-7ea890052166?crop=entropy&cs=srgb&fm=jpg&ixid=M3w8NTYxODF8MHwxfHNlYXJjaHw0fHxkYXRhJTIwYW5hbHl0aWNzJTIwZGFzaGJvYXJkJTIwdGVjaG5vbG9neSUyMGRhcmslMjB1aXxlbnwwfHx8fDE3ODkzOTEyNTZ8MA&ixlib=rb-4.1.0&q=85",
-    github: "https://github.com/mohitroy319/cosmopulse",
-    demo: "https://cosmopulse-demo.app",
+      "../../public/Home_Page.png",
+    github: "https://github.com/MohitOrion/Projects/tree/main/Small%20Projects",
+    demo: "https://mohitorion.github.io/Projects/",
   },
   {
     id: "proj-2",
-    title: "Predictive Customer Churn Model",
+    title: "Customer Behavior Dashboard",
     cat: "analytics",
     catLabel: "Data Analytics",
-    tech: ["Python", "Pandas", "Scikit-Learn", "Matplotlib", "SQL"],
+    tech: ["Python", "Pandas", "Power BI", "PostgreSQL", "Excel"],
     summary:
-      "Machine-learning workflow classifying churn risk at 92% accuracy, with automated feature-importance visualization and a full EDA report.",
+      "This project analyzes customer shopping behavior using transactional data from 3,900 purchases across various product categories. The goal is to uncover insights into spending patterns, customer segments, product preferences, and subscription behavior to guide strategic business decisions.",
     image:
-      "https://images.unsplash.com/photo-1720962158789-9389a4f399da?crop=entropy&cs=srgb&fm=jpg&ixid=M3w8NTYxODF8MHwxfHNlYXJjaHwyfHxkYXRhJTIwYW5hbHl0aWNzJTIwZGFzaGJvYXJkJTIwdGVjaG5vbG9neSUyMGRhcmslMjB1aXxlbnwwfHx8fDE3ODkzOTEyNTZ8MA&ixlib=rb-4.1.0&q=85",
-    github: "https://github.com/mohitroy319/churn-analytics",
-    demo: "https://churn-analytics.app",
+      "../../public/Customers_Analytics.jpg",
+    github: "https://github.com/MohitOrion/Projects/tree/main/Data-Analysis",
+    demo: "https://docs.google.com/presentation/d/1DiZGOmRbsc9rOzNnwRAttsT5OmrF7IB-/edit?usp=sharing&ouid=108632968501610087936&rtpof=true&sd=true",
   },
-  {
+  { 
     id: "proj-3",
-    title: "OrbitStore — MERN E-Commerce Engine",
+    title: "OrbitStore — MERN E-Commerce Engine (PlaceHolder)",
     cat: "web",
     catLabel: "Full-Stack Web",
     tech: ["MongoDB", "Express", "React", "Node.js", "Redux"],
@@ -51,7 +51,7 @@ const PROJECTS = [
   },
   {
     id: "proj-4",
-    title: "Financial Time-Series Forecasting",
+    title: "Financial Time-Series Forecasting (PlaceHolder)",
     cat: "analytics",
     catLabel: "Data Analytics",
     tech: ["Python", "Statsmodels", "Streamlit", "Plotly", "Pandas"],
