@@ -1,0 +1,104 @@
+/* ---------------------------------------------------------------------------
+   About ("Origin"): intro text, the fact list and the Orion star chart.
+   --------------------------------------------------------------------------- */
+.origin-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+.origin-copy { min-width: 0; }
+.origin-copy p { max-width: 62ch; margin: 0 0 18px; color: var(--ink-muted); }
+.origin-copy .lede { font-size: var(--step-1); line-height: 1.45; color: var(--ink); }
+
+/* ----- Fact list (one row per star) ----- */
+.star-table { margin-top: 36px; border-top: 1px solid var(--line); }
+.star-row {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 8.5rem) minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  width: 100%;
+  padding: 13px 4px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  transition: background-color 0.25s;
+}
+.star-row:hover, .star-row.active { background: rgba(255, 180, 106, 0.06); }
+.star-row .swatch {
+  align-self: center;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+.star-row .key {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.star-row.active .key { color: var(--accretion); }
+.star-row .fact { color: var(--ink); font-size: var(--step--1); line-height: 1.5; }
+.star-row .fact small {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+/* ----- Star chart (SVG built in src/sections/origin.js) ----- */
+.chart { position: sticky; top: 110px; margin: 0; }
+.chart svg { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); overflow: visible; }
+.chart figcaption {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  text-align: center;
+}
+.grat { stroke: rgba(146, 210, 255, 0.12); stroke-width: 1; stroke-dasharray: 2 6; fill: none; }
+.grat-label { fill: rgba(146, 210, 255, 0.45); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; }
+.con-line { stroke: rgba(146, 210, 255, 0.42); stroke-width: 1.2; fill: none; transition: stroke 0.3s; }
+.con-line.lit { stroke: var(--accretion); }
+
+.star-g { cursor: pointer; outline: none; }
+.star-g .halo {
+  opacity: 0.55;
+  animation: twinkle var(--tw-dur, 4s) ease-in-out var(--tw-delay, 0s) infinite;
+  transition: opacity 0.3s, transform 0.4s var(--ease-out);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.star-g .label {
+  fill: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: fill 0.3s;
+}
+.star-g .sub { fill: var(--ink-faint); font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; }
+.star-g.active .halo, .star-g:hover .halo, .star-g:focus-visible .halo { opacity: 1; transform: scale(1.6); animation: none; }
+.star-g.active .label, .star-g:hover .label, .star-g:focus-visible .label { fill: var(--accretion); }
+.star-g:focus-visible .core { stroke: var(--accretion); stroke-width: 2; }
+@keyframes twinkle { 50% { opacity: 0.22; } }
+
+@media (max-width: 900px) {
+  .origin-grid { grid-template-columns: minmax(0, 1fr); }
+  .chart { position: relative; top: 0; order: -1; }
+  .chart svg { max-height: 70vh; }
+}
+@media (max-width: 640px) {
+  .star-row { grid-template-columns: 18px minmax(0, 1fr); }
+  .star-row .key, .star-row .fact { grid-column: 2; }
+}

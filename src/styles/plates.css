@@ -1,0 +1,62 @@
+/* ---------------------------------------------------------------------------
+   "Plates": the shared shell of every content section (heading, label, intro)
+   plus the small pill tags used in several places.
+   --------------------------------------------------------------------------- */
+/* overflow-x: clip stops the rotating skill rings from poking past the screen edge on
+   phones. Unlike "hidden", "clip" doesn't break the sticky star chart and pulsar plot. */
+.plate { position: relative; padding-block: clamp(96px, 16vh, 180px); overflow-x: clip; }
+/* A soft dark wash keeps text readable over the galaxy without boxing every section. */
+.plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 70% at 30% 50%, rgba(4, 5, 11, 0.62), rgba(4, 5, 11, 0.15) 70%, transparent);
+  pointer-events: none;
+}
+
+.plate-head { max-width: 860px; margin-bottom: clamp(40px, 7vh, 72px); }
+
+/* "ORIGIN —— ABOUT ME" style label above each heading. */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.eyebrow span { color: var(--accretion); }
+.eyebrow span::after {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  margin-left: 12px;
+  vertical-align: middle;
+  background: var(--line-strong);
+}
+
+.plate-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-3);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.plate-title em { font-style: italic; color: var(--accretion); }
+.plate-intro { max-width: 60ch; margin: 20px 0 0; color: var(--ink-muted); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tags li {
+  padding: 3px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}

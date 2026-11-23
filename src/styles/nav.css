@@ -1,0 +1,140 @@
+/* ---------------------------------------------------------------------------
+   Top navigation bar, mobile menu and the spectrum progress bar.
+   --------------------------------------------------------------------------- */
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  padding-top: env(safe-area-inset-top, 0px);
+  transition: background-color 0.4s;
+}
+/* Solid tint instead of a backdrop blur: blurring the moving 3D sky
+   every frame was one of the main causes of lag on desktop. */
+.nav.scrolled, .nav.menu-open { background: rgba(4, 5, 11, 0.88); }
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: calc(var(--wrap) + 160px);
+  height: 68px;
+  margin-inline: auto;
+  padding-left: var(--gutter-l);
+  padding-right: var(--gutter-r);
+}
+.brand-handle { font-family: var(--font-mono); font-size: var(--step--2); color: var(--ink-faint); letter-spacing: 0.08em; }
+
+.nav-links { display: flex; gap: 4px; }
+.nav-links a {
+  position: relative;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-muted);
+  border-radius: 999px;
+  transition: color 0.25s, background-color 0.25s;
+}
+.nav-links a:hover { color: var(--ink); background: rgba(160, 172, 222, 0.08); }
+.nav-links a.active { color: var(--accretion); }
+.nav-links a.active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--accretion);
+  box-shadow: 0 0 8px var(--accretion);
+}
+
+.nav-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+.status { display: inline-flex; align-items: center; gap: 8px; }
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--aurora);
+  box-shadow: 0 0 10px var(--aurora);
+  animation: pulse 2.6s ease-in-out infinite;
+}
+.clock { font-variant-numeric: tabular-nums; color: var(--ink-faint); }
+.clock span { color: var(--ink-muted); }
+
+/* ----- Mobile menu ----- */
+.menu-btn {
+  display: none;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+}
+/* Three lines that turn into an X when open. */
+.menu-icon, .menu-icon::before, .menu-icon::after {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  margin: 0 auto;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s;
+}
+.menu-icon { position: relative; }
+.menu-icon::before, .menu-icon::after { content: ""; position: absolute; left: 0; }
+.menu-icon::before { top: -5px; }
+.menu-icon::after { top: 5px; }
+.menu-btn[aria-expanded="true"] .menu-icon { background: transparent; }
+.menu-btn[aria-expanded="true"] .menu-icon::before { transform: translateY(5px) rotate(45deg); }
+.menu-btn[aria-expanded="true"] .menu-icon::after { transform: translateY(-5px) rotate(-45deg); }
+
+.mobile-menu {
+  display: grid;
+  padding: 8px var(--gutter-r) 24px var(--gutter-l);
+  background: rgba(4, 5, 11, 0.96);
+  border-bottom: 1px solid var(--line);
+}
+.mobile-menu a {
+  padding: 14px 0;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+/* ----- Spectrum progress bar (see src/ui/progress.js) ----- */
+.spectrum { position: relative; height: 3px; background: rgba(160, 172, 222, 0.08); overflow: hidden; }
+.spectrum-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #6d3cff 0%, #3d6bff 12%, #2fb8ff 24%, #3ef0b0 38%, #c9f04a 50%, #ffe14a 58%, #ffaa3d 70%, #ff5a36 84%, #c0132a 100%);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+.spectrum-lines { position: absolute; inset: 0; }
+.spectrum-lines i { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(4, 5, 11, 0.9); }
+
+/* ----- Smaller screens ----- */
+@media (max-width: 1080px) {
+  .nav-links a { padding: 8px 10px; }
+  .clock { display: none; }
+}
+@media (max-width: 900px) {
+  .nav-links, .status { display: none; }
+  .menu-btn { display: inline-grid; place-items: center; }
+}

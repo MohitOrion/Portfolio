@@ -1,0 +1,5 @@
+/* Styles for the private inbox page (/inbox). */
+@import "./tokens.css";
+@import "./base.css";
+@import "./plates.css";
+@import "./inbox.css";

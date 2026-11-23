@@ -1,0 +1,106 @@
+/* ---------------------------------------------------------------------------
+   Journey ("Stellar evolution"): the timeline, its glowing beam, and one
+   small star icon per stage of a star's life.
+   --------------------------------------------------------------------------- */
+.timeline { position: relative; display: grid; margin: 0; padding: 0; list-style: none; }
+
+/* Columns: [when] [star] [text]. The beam runs down the centre of the star column. */
+.stage {
+  display: grid;
+  grid-template-columns: 11rem 44px minmax(0, 1fr);
+  gap: 0 28px;
+  padding-block: 22px;
+}
+.timeline-beam {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: calc(11rem + 28px + 21.5px);
+  width: 1px;
+  background: var(--line);
+}
+.timeline-beam span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(var(--nebula), var(--ion) 45%, var(--accretion));
+  box-shadow: 0 0 12px rgba(255, 180, 106, 0.5);
+  transform-origin: 50% 0;
+}
+
+.stage-when { padding-top: 6px; text-align: right; }
+.stage-when b {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--step--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accretion);
+}
+.stage-when span {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.stage-body { max-width: 62ch; padding: 0 0 6px; }
+.stage-body h3 { margin: 0 0 6px; font-family: var(--font-display); font-weight: 400; font-size: var(--step-2); line-height: 1.1; }
+.stage-body p { margin: 0; color: var(--ink-muted); font-size: var(--step--1); line-height: 1.7; }
+
+/* ----- Star icons, one per life stage ----- */
+.stage-star { position: relative; display: grid; place-items: start center; padding-top: 4px; }
+/* The dark fill hides the beam line behind each star. */
+.stage-star i { display: block; border-radius: 50%; background-color: var(--void); }
+
+.s-nebula {      /* a diffuse violet cloud */
+  width: 30px;
+  height: 30px;
+  background-image: radial-gradient(circle, rgba(199, 166, 255, 0.85), rgba(199, 166, 255, 0.18) 55%, transparent 72%);
+}
+.s-protostar {   /* small, red, still contracting */
+  width: 16px;
+  height: 16px;
+  margin-top: 7px;
+  background-image: radial-gradient(circle, #ffd3b0, #ff7a45 60%, transparent 72%);
+  box-shadow: 0 0 16px rgba(255, 122, 69, 0.8);
+}
+.s-ignition {    /* fusion switches on */
+  width: 22px;
+  height: 22px;
+  margin-top: 4px;
+  background-image: radial-gradient(circle, #fff, #ffe39a 45%, rgba(255, 200, 80, 0.2) 70%, transparent 72%);
+  box-shadow: 0 0 24px rgba(255, 210, 120, 0.85);
+}
+.s-main {        /* steady, sun-like */
+  width: 20px;
+  height: 20px;
+  margin-top: 5px;
+  background-image: radial-gradient(circle, #fff, #fff1d6 50%, transparent 72%);
+  box-shadow: 0 0 18px rgba(255, 241, 214, 0.8);
+}
+.s-luminous {    /* big and blue-white */
+  width: 28px;
+  height: 28px;
+  margin-top: 1px;
+  background-image: radial-gradient(circle, #fff, #cfe6ff 40%, rgba(146, 210, 255, 0.25) 66%, transparent 72%);
+  box-shadow: 0 0 32px rgba(146, 210, 255, 0.9);
+}
+.s-next {        /* not yet formed: a dashed outline */
+  width: 24px;
+  height: 24px;
+  margin-top: 3px;
+  border: 1px dashed var(--accretion);
+  animation: pulse 2.6s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  .timeline-beam { left: 21.5px; }
+  .stage { grid-template-columns: 44px minmax(0, 1fr); gap: 0 16px; }
+  .stage-star { grid-column: 1; grid-row: 1 / span 2; }
+  .stage-when { grid-column: 2; grid-row: 1; margin-bottom: 6px; padding-top: 0; text-align: left; }
+  .stage-when b { display: inline; }
+  .stage-when span { display: inline; margin-left: 10px; }
+  .stage-body { grid-column: 2; }
+}

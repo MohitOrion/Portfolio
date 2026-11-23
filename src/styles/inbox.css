@@ -1,0 +1,69 @@
+/* ---------------------------------------------------------------------------
+   Private inbox page (/inbox).
+   --------------------------------------------------------------------------- */
+.inbox-page { min-height: 100vh; }
+.inbox-wrap { max-width: 880px; padding-block: 32px 64px; }
+
+.inbox-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 48px; }
+.inbox-back {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-muted);
+}
+.inbox-back:hover { color: var(--accretion); }
+
+.inbox-notice {
+  padding: 16px 20px;
+  color: var(--ink-muted);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.inbox-card { padding: clamp(20px, 3vw, 32px); background: var(--panel); border: 1px solid var(--line); border-radius: 22px; }
+.inbox-page h1 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--step-2); line-height: 1.1; }
+
+.inbox-login { display: grid; gap: 18px; max-width: 440px; margin: 8vh auto 0; }
+.inbox-error {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: var(--step--1);
+  color: #ffc2ad;
+  background: rgba(255, 122, 69, 0.1);
+  border: 1px solid rgba(255, 122, 69, 0.35);
+  border-radius: 12px;
+}
+
+.inbox-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+.inbox-count { font-family: var(--font-mono); font-size: var(--step-0); color: var(--accretion); }
+.inbox-actions { display: flex; gap: 10px; }
+
+.inbox-list { display: grid; gap: 16px; }
+.inbox-empty { padding: 48px 0; text-align: center; color: var(--ink-muted); }
+.inbox-message-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+.inbox-name { margin: 0; font-family: var(--font-display); font-size: var(--step-1); }
+.inbox-message-top a { font-size: var(--step--1); color: var(--ion); text-decoration: none; }
+.inbox-meta { display: grid; justify-items: end; gap: 6px; }
+.inbox-topic {
+  padding: 3px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--nebula);
+  border: 1px solid rgba(199, 166, 255, 0.35);
+  border-radius: 999px;
+}
+.inbox-meta time { font-family: var(--font-mono); font-size: var(--step--2); color: var(--ink-faint); }
+.inbox-text { margin: 16px 0 0; padding-top: 16px; white-space: pre-wrap; color: var(--ink-muted); border-top: 1px solid var(--line); }
+
+/* No black hole behind the messages: just the soft nebula colours. */
+.inbox-page .sky-fallback {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(120, 90, 200, 0.18), transparent 50%),
+    radial-gradient(circle at 80% 75%, rgba(40, 120, 180, 0.14), transparent 50%),
+    var(--void);
+}

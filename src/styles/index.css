@@ -1,0 +1,13 @@
+/* Styles for the portfolio page. Each file covers one part of the page,
+   in the same order the parts appear. Vite bundles them into one file. */
+@import "./tokens.css";
+@import "./base.css";
+@import "./nav.css";
+@import "./hero.css";
+@import "./plates.css";
+@import "./origin.css";
+@import "./orbits.css";
+@import "./catalogue.css";
+@import "./evolution.css";
+@import "./signal.css";
+@import "./footer.css";

@@ -1,0 +1,155 @@
+/* ---------------------------------------------------------------------------
+   Skills ("Orbits"): the spinning rings, role blurbs and grouped skill lists.
+
+   How the spinning works: each .ring rotates forever. Inside it, each skill
+   (.chip) is pushed out to the ring's radius at its own angle (--a). The
+   .chip-spin inside rotates the *opposite* way at the same speed, so the
+   label text always stays upright.
+   --------------------------------------------------------------------------- */
+.orbits-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+
+.orbit {
+  position: relative;
+  width: min(100%, 620px);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  container-type: inline-size; /* lets children size themselves in cqw (% of this width) */
+}
+.orbit-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 15cqw;
+  height: 15cqw;
+  margin: -7.5cqw 0 0 -7.5cqw;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, #fff6e6 0%, #ffd29a 28%, #ff9a4d 58%, rgba(255, 122, 69, 0.15) 75%, transparent 76%);
+  box-shadow: 0 0 60px rgba(255, 160, 90, 0.55), 0 0 140px rgba(255, 122, 69, 0.25);
+}
+.orbit-core span { font-family: var(--font-display); font-style: italic; font-size: 5cqw; color: #3a1604; }
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  margin: calc(var(--r) * -1) 0 0 calc(var(--r) * -1);
+  border: 1px dashed rgba(160, 172, 222, 0.2);
+  border-radius: 50%;
+  animation: spin calc(var(--period) * 1s) linear infinite;
+  animation-direction: var(--dir, normal);
+  transition: border-color 0.4s;
+}
+.chip {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a)));
+}
+.chip-spin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  animation: spin calc(var(--period) * 1s) linear infinite;
+  animation-direction: var(--counter, reverse);
+}
+.chip-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 1.75cqw, 11.5px);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--ink-muted);
+  background: rgba(9, 11, 24, 0.86);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: color 0.3s, border-color 0.3s, opacity 0.3s;
+}
+.chip-label::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--dot, var(--ion));
+  box-shadow: 0 0 6px var(--dot, var(--ion));
+}
+.orbit:hover .ring, .orbit:hover .chip-spin { animation-play-state: paused; }
+
+/* Highlight one ring while its skill group is hovered. */
+.orbit[data-active] .chip-label { opacity: 0.35; }
+.orbit[data-active] .ring.on { border-color: rgba(255, 180, 106, 0.55); border-style: solid; }
+.orbit[data-active] .ring.on .chip-label { opacity: 1; color: var(--ink); border-color: rgba(255, 180, 106, 0.55); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ----- Text side ----- */
+.orbits-copy { min-width: 0; display: grid; gap: 36px; }
+.roles { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.role h3 { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: var(--step-2); line-height: 1.1; }
+.role h3 em { color: var(--accretion); }
+.role p { margin: 0; color: var(--ink-muted); font-size: var(--step--1); line-height: 1.65; }
+
+.skill-groups { display: grid; border-top: 1px solid var(--line); }
+.skill-group {
+  display: grid;
+  grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color 0.25s;
+}
+.skill-group:hover, .skill-group:focus-within { background: rgba(255, 180, 106, 0.05); }
+.skill-group h4 {
+  margin: 2px 0 0;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--step--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.skill-group:hover h4 { color: var(--accretion); }
+.group-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background: var(--dot);
+  box-shadow: 0 0 8px var(--dot);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring, .chip-spin { animation: none !important; }
+}
+@media (max-width: 1080px) {
+  .roles { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .orbits-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .orbit { width: min(100%, 420px); }
+  /* Too small for words on phones: show the skills as dots; the list below has the names. */
+  .chip-label { font-size: 0; gap: 0; padding: 3px; }
+  .chip-label::before { width: 6px; height: 6px; }
+  .skill-group { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}

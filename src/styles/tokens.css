@@ -1,0 +1,47 @@
+/* ---------------------------------------------------------------------------
+   Design tokens: every colour, font and size used on the site.
+   Change a value here and it updates everywhere.
+
+   Concept: one fixed WebGL sky behind a single scrolling column. Each section
+   is a "plate" in an observatory catalogue, kept quiet so the black hole
+   stays the one loud thing on the page.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+
+  /* Colours */
+  --void: #04050b;                         /* page background: deep space */
+  --panel: rgba(9, 11, 24, 0.82);          /* cards and the form */
+  --panel-solid: #090b18;
+  --ink: #eceef6;                          /* main text */
+  --ink-muted: #a6acc4;                    /* secondary text */
+  --ink-faint: #6e7593;                    /* labels */
+  --line: rgba(160, 172, 222, 0.16);       /* hairlines and borders */
+  --line-strong: rgba(160, 172, 222, 0.32);
+  --accretion: #ffb46a;                    /* main accent: the glowing disk */
+  --plasma: #ff7a45;                       /* errors and hot highlights */
+  --ion: #92d2ff;                          /* cool accent: blue stars */
+  --nebula: #c7a6ff;                       /* violet accent */
+  --aurora: #7ef0b0;                       /* green: "available", success */
+  --on-accent: #1a0d02;                    /* text on amber buttons */
+
+  /* Fonts */
+  --font-display: "Instrument Serif", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-body: "Hanken Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Type scale: each step grows smoothly with the screen width */
+  --step--2: clamp(0.68rem, 0.66rem + 0.08vw, 0.74rem);
+  --step--1: clamp(0.8rem, 0.77rem + 0.12vw, 0.88rem);
+  --step-0: clamp(1rem, 0.96rem + 0.18vw, 1.1rem);
+  --step-1: clamp(1.18rem, 1.08rem + 0.45vw, 1.42rem);
+  --step-2: clamp(1.55rem, 1.3rem + 1.1vw, 2.2rem);
+  --step-3: clamp(2.3rem, 1.6rem + 3.2vw, 4.4rem);
+  --step-hero: clamp(4.6rem, 0.6rem + 15vw, 14.5rem);
+
+  /* Layout */
+  --wrap: 1240px;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px), 3.5vw);
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px), 3.5vw);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

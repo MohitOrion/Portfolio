@@ -1,0 +1,25 @@
+/* ---------------------------------------------------------------------------
+   Footer.
+   --------------------------------------------------------------------------- */
+.footer { position: relative; background: rgba(4, 5, 11, 0.85); border-top: 1px solid var(--line); }
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+  padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px));
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+.footer-inner p { margin: 0; }
+.footer-faint { color: var(--ink-faint); }
+.footer-top { text-decoration: none; color: var(--ink); }
+.footer-top:hover { color: var(--accretion); }
+.noscript { position: relative; z-index: 2; padding: 24px; text-align: center; }
+
+@media (max-width: 640px) {
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+}
