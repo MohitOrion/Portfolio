@@ -15,13 +15,6 @@
 }
 .inbox-back:hover { color: var(--accretion); }
 
-.inbox-notice {
-  padding: 16px 20px;
-  color: var(--ink-muted);
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-}
 
 .inbox-card { padding: clamp(20px, 3vw, 32px); background: var(--panel); border: 1px solid var(--line); border-radius: 22px; }
 .inbox-page h1 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--step-2); line-height: 1.1; }
@@ -59,6 +52,8 @@
 }
 .inbox-meta time { font-family: var(--font-mono); font-size: var(--step--2); color: var(--ink-faint); }
 .inbox-text { margin: 16px 0 0; padding-top: 16px; white-space: pre-wrap; color: var(--ink-muted); border-top: 1px solid var(--line); }
+.inbox-delete { margin-top: 16px; }
+.inbox-delete.armed { color: var(--plasma); border-color: var(--plasma); }
 
 /* No black hole behind the messages: just the soft nebula colours. */
 .inbox-page .sky-fallback {

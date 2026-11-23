@@ -2,11 +2,9 @@
 //  Contact ("Signal"): contact details with copy buttons, social links, the
 //  pulsar plot, and the contact form.
 //
-//  The form has two modes (see src/config.js):
-//   • A backend is configured → POST the message to {API}/contact,
-//     exactly like the previous version of the site did.
-//   • No backend, or the request fails → open the visitor's email app
-//     with the message already written.
+//  The form POSTs the message to the contact backend ({API}/contact, see
+//  api/contact.js). If the backend can't be reached, it opens the visitor's
+//  email app with the message already written, so nothing is lost.
 // ---------------------------------------------------------------------------
 import { $, copyText, h } from "../lib/dom.js";
 import { reducedMotion } from "../lib/motion.js";
@@ -75,10 +73,10 @@ function setupForm() {
     email: $("#cf-email"),
     topic: $("#cf-topic"),
     message: $("#cf-message"),
+    trap: $("#cf-website"), // hidden from people; only bots fill it in
   };
 
   for (const topic of CONTACT_TOPICS) fields.topic.append(h("option", { value: topic, text: topic }));
-  submit.textContent = API ? "Send message" : "Write email";
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -87,6 +85,7 @@ function setupForm() {
       email: fields.email.value.trim(),
       topic: fields.topic.value,
       message: fields.message.value.trim(),
+      website: fields.trap.value,
     };
 
     const problem = validate(values, fields);
@@ -95,19 +94,21 @@ function setupForm() {
       return;
     }
 
-    if (API) {
-      submit.disabled = true;
-      status.textContent = "Sending…";
-      const sent = await sendToBackend(values);
-      submit.disabled = false;
-      if (sent) {
-        status.textContent = `Thanks, ${values.name}. Your message has arrived and I'll reply soon.`;
-        form.reset();
-        return;
-      }
-      // Backend unreachable: fall through to email so the message isn't lost.
+    submit.disabled = true;
+    status.textContent = "Sending…";
+    const result = await sendToBackend(values);
+    submit.disabled = false;
+
+    if (result.ok) {
+      status.textContent = `Thanks, ${values.name}. Your message has arrived and I'll reply soon.`;
+      form.reset();
+    } else if (result.status === 400 || result.status === 429) {
+      // The server explained what's wrong (invalid field, or too many messages).
+      status.textContent = result.detail;
+    } else {
+      // Server down or not set up yet: fall back to email so the message isn't lost.
+      openEmailApp(values, status);
     }
-    openEmailApp(values, status, Boolean(API));
   });
 }
 
@@ -123,32 +124,36 @@ function validate(values, fields) {
   return "";
 }
 
-/** Same request body the previous site sent: { name, email, role_interest, message }. */
+/** POST the message. Returns { ok, status, detail }. */
 async function sendToBackend(values) {
   try {
     const response = await fetch(`${API}/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: values.name, email: values.email, role_interest: values.topic, message: values.message }),
+      body: JSON.stringify({
+        name: values.name,
+        email: values.email,
+        role_interest: values.topic,
+        message: values.message,
+        website: values.website,
+      }),
     });
-    return response.ok;
+    const data = await response.json().catch(() => ({}));
+    return { ok: response.ok, status: response.status, detail: data.detail || "" };
   } catch {
-    return false;
+    return { ok: false, status: 0, detail: "" };
   }
 }
 
-function openEmailApp(values, status, backendFailed) {
+function openEmailApp(values, status) {
   const subject = `[Portfolio] ${values.topic} from ${values.name}`;
   const body = `${values.message}\n\n${values.name}\n${values.email}`;
   const fullText = `To: ${PROFILE.email}\nSubject: ${subject}\n\n${body}`;
 
   const copyButton = h("button", { class: "copy", type: "button", text: "Copy message" });
   copyButton.addEventListener("click", () => copyText(fullText, copyButton));
-  const intro = backendFailed
-    ? "The message service didn't respond, so your email app should open with this message ready to send."
-    : "Your email app should open with this message ready to send.";
   status.replaceChildren(
-    `${intro} If nothing opened, copy it and email `,
+    "The message service didn't respond, so your email app should open with this message ready to send. If nothing opened, copy it and email ",
     h("span", { class: "status-email", text: PROFILE.email }),
     ".",
     copyButton);

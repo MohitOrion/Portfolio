@@ -10,6 +10,11 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
   },
   {
+    files: ["api/**/*.js"],
+    extends: [js.configs.recommended],
+    languageOptions: { globals: globals.node },
+  },
+  {
     files: ["*.config.js"],
     languageOptions: { globals: globals.node },
   },

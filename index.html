@@ -176,12 +176,16 @@
               <label for="cf-topic">Topic</label>
               <select id="cf-topic" name="topic"></select>
             </div>
+            <div class="field-trap" aria-hidden="true">
+              <label for="cf-website">Leave this field empty</label>
+              <input id="cf-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
             <div class="field field-wide">
               <label for="cf-message">Message</label>
               <textarea id="cf-message" name="message" rows="5" required placeholder="Tell me about the role or project."></textarea>
             </div>
             <div class="form-foot field-wide">
-              <button class="btn btn-primary" type="submit" data-magnetic>Write email</button>
+              <button class="btn btn-primary" type="submit" data-magnetic>Send message</button>
               <p class="form-status" id="formStatus" aria-live="polite"></p>
             </div>
           </form>

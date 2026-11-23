@@ -1,9 +1,11 @@
 // ---------------------------------------------------------------------------
 //  Private inbox (/inbox): sign in, then read the messages people sent
 //  through the contact form. Talks to the same backend as before:
-//    POST {API}/auth/login   { email, password }  → { token }
-//    GET  {API}/contact      (Authorization: Bearer <token>) → [messages]
+//    POST   {API}/auth/login     { email, password }  → { token }
+//    GET    {API}/contact        (Authorization: Bearer <token>) → [messages]
+//    DELETE {API}/contact?id=N   delete one message
 //  The sign-in token is remembered in this browser (localStorage).
+//  See api/ for the server side.
 // ---------------------------------------------------------------------------
 import { $, h } from "../lib/dom.js";
 import { API } from "../config.js";
@@ -11,7 +13,6 @@ import { API } from "../config.js";
 const TOKEN_KEY = "inbox_token";
 
 const view = $("#inboxView");
-const notice = $("#inboxNotice");
 
 function getToken() {
   try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
@@ -29,11 +30,6 @@ function describeError(detail) {
   if (typeof detail === "string") return detail;
   if (Array.isArray(detail)) return detail.map((d) => d?.msg || "").filter(Boolean).join(" ");
   return String(detail);
-}
-
-function showNotice(text) {
-  notice.textContent = text;
-  notice.hidden = !text;
 }
 
 // ----- sign in ---------------------------------------------------------------
@@ -106,7 +102,7 @@ async function renderInbox() {
 async function loadMessages(list, count, refresh) {
   refresh.disabled = true;
   try {
-    const response = await fetch(`${API}/contact`, { headers: { Authorization: `Bearer ${getToken()}` } });
+    const response = await fetch(`${API}/contact`, { headers: authHeader() });
     if (response.status === 401) {
       setToken(null);
       renderLogin("Your session expired. Please sign in again.");
@@ -125,6 +121,8 @@ async function loadMessages(list, count, refresh) {
   }
 }
 
+const authHeader = () => ({ Authorization: `Bearer ${getToken()}` });
+
 function createMessage(message) {
   const when = new Date(message.timestamp).toLocaleString("en-IN", {
     day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
@@ -137,15 +135,55 @@ function createMessage(message) {
       h("div", { class: "inbox-meta" },
         h("span", { class: "inbox-topic", text: message.role_interest }),
         h("time", { datetime: message.timestamp, text: when }))),
-    h("p", { class: "inbox-text", text: message.message }));
+    h("p", { class: "inbox-text", text: message.message }),
+    createDeleteButton(message));
+}
+
+/** Delete takes two clicks: the first asks "Delete for good?", the second deletes. */
+function createDeleteButton(message) {
+  const button = h("button", { class: "copy inbox-delete", type: "button", text: "Delete" });
+  let armed = false;
+  let resetTimer = 0;
+
+  button.addEventListener("click", async () => {
+    if (!armed) {
+      armed = true;
+      button.textContent = "Delete for good?";
+      button.classList.add("armed");
+      resetTimer = setTimeout(() => {
+        armed = false;
+        button.textContent = "Delete";
+        button.classList.remove("armed");
+      }, 4000);
+      return;
+    }
+    clearTimeout(resetTimer);
+    button.disabled = true;
+    button.textContent = "Deleting…";
+    try {
+      const response = await fetch(`${API}/contact?id=${encodeURIComponent(message.id)}`, { method: "DELETE", headers: authHeader() });
+      if (response.status === 401) {
+        setToken(null);
+        renderLogin("Your session expired. Please sign in again.");
+        return;
+      }
+      if (!response.ok && response.status !== 404) throw new Error();
+      const card = button.closest(".inbox-message");
+      const count = $(".inbox-count");
+      card.remove();
+      const left = document.querySelectorAll(".inbox-message").length;
+      count.textContent = `(${left})`;
+      if (!left) $(".inbox-list").replaceChildren(h("p", { class: "inbox-empty", text: "No messages yet. Share your portfolio to get some." }));
+    } catch {
+      button.disabled = false;
+      button.textContent = "Couldn't delete. Try again";
+      armed = false;
+    }
+  });
+  return button;
 }
 
 // ----- start -----------------------------------------------------------------
 
-if (!API) {
-  showNotice("The inbox needs the contact backend. Set VITE_BACKEND_URL (see src/config.js) and redeploy.");
-} else if (getToken()) {
-  renderInbox();
-} else {
-  renderLogin();
-}
+if (getToken()) renderInbox();
+else renderLogin();

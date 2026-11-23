@@ -36,11 +36,12 @@ Each part of the page has its own JavaScript file and its own CSS file, with mat
 ```
 index.html                 page structure for the portfolio
 inbox/index.html           page structure for the private inbox (/inbox)
+api/                       contact backend (Vercel Functions): contact.js, auth/login.js, health.js
 
 src/
   main.js                  entry point: builds each section, then starts the 3D sky
   data.js                  ← your content
-  config.js                optional contact backend (see below)
+  config.js                where the contact backend lives (default: this site's /api)
 
   sections/                one file per page section
     hero.js                  name animation on load, fade-out on scroll
@@ -80,12 +81,33 @@ Each file starts with a comment explaining what it does. The deployed site is mi
 
 ## Contact form and inbox
 
-The form works with or without a backend:
+The contact backend lives in [`api/`](api) and runs as Vercel Functions alongside the site, so there is no separate server to host.
 
-- **With a backend:** set `VITE_BACKEND_URL` to your API's base URL (in Vercel: Project → Settings → Environment Variables, then redeploy). The form POSTs `{ name, email, role_interest, message }` to `/api/contact`, the same request the previous version of the site sent. Messages can be read at **`/inbox`**, which signs in with `/api/auth/login`.
-- **Without one:** the form opens the visitor's email app with the message already written.
+| Endpoint | Who | What it does |
+| --- | --- | --- |
+| `POST /api/contact` | anyone | saves a message from the form |
+| `GET /api/contact` | signed in | lists messages, newest first |
+| `DELETE /api/contact?id=N` | signed in | deletes a message |
+| `POST /api/auth/login` | anyone | signs in to the inbox, returns a 7-day token |
+| `GET /api/health` | anyone | shows which parts are set up (never shows secrets) |
 
-For local development, copy `.env.example` to `.env`.
+Messages are stored in Postgres (the table is created automatically). Read and delete them at **`/inbox`**.
+
+Built-in protection: a hidden spam-trap field, a limit of 5 messages per visitor per 15 minutes, input length limits, slowed-down wrong passwords, and signed tokens. If the backend can't be reached, the form opens the visitor's email app instead, so no message is lost.
+
+### Setting it up on Vercel
+
+1. **Database:** in your Vercel project, open **Storage**, create a **Neon** Postgres database (free plan) and connect it to this project. That sets `DATABASE_URL` for you. (Or create one in your own Neon account and add its connection string as `DATABASE_URL`.)
+2. **Inbox login:** under **Settings → Environment Variables**, add `ADMIN_EMAIL` and `ADMIN_PASSWORD` (12+ characters, not used anywhere else).
+3. **Optional email alerts:** add `RESEND_API_KEY` from [resend.com](https://resend.com) to get an email for each new message. They go to `NOTIFY_EMAIL`, or `ADMIN_EMAIL` if that isn't set.
+4. **Redeploy** (environment variables only apply to new deployments).
+5. Open `/api/health`. It should say `"contactForm": "ready"`. Then send yourself a test message and read it at `/inbox`.
+
+### Running it locally
+
+`npm run dev` serves the pages only; the form then falls back to email. To run the functions too, use the Vercel CLI (`npx vercel dev`) with the variables above in a `.env` file. See `.env.example`.
+
+To use a backend hosted elsewhere instead, set `VITE_BACKEND_URL` to its base URL (see `src/config.js`).
 
 ## Performance
 
@@ -103,4 +125,4 @@ For local development, copy `.env.example` to `.env`.
 
 ## Deploy
 
-The Vercel project builds this repository with `npm run build` and serves `dist/`. No settings need changing. `vercel.json` only adds a rewrite so `/inbox` works.
+The Vercel project builds this repository with `npm run build`, serves `dist/`, and deploys the functions in `api/` automatically. `vercel.json` only adds a rewrite so `/inbox` works.
