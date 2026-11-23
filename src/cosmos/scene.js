@@ -309,7 +309,9 @@ function createAdaptiveQuality({ start, floor, onChange }) {
 
 /**
  * Start the scene on a <canvas>. Returns null if WebGL isn't available.
- * The returned object lets the page tell the scene where the visitor is:
+ * The returned object lets the page talk to the scene:
+ *   firstFrame       a promise that resolves once the first frame is drawn
+ *   begin()          start the fade-in (called when the loading screen leaves)
  *   setStops([...])  scroll progress (0..1) at which each section starts
  *   setProgress(p)   current scroll progress (0..1)
  */
@@ -357,6 +359,9 @@ export function initCosmos(canvas, { reducedMotion = false } = {}) {
   let intro = reducedMotion ? 1 : 0; // fade-in on load, 0 → 1
   let dolly = reducedMotion ? 0 : 1; // camera glides in on load, 1 → 0
   let heroScale = 1;
+  let started = reducedMotion; // the fade-in waits for begin()
+  let markFirstFrame;
+  const firstFrame = new Promise((resolve) => { markFirstFrame = resolve; });
 
   const camPos = new Vector3();
   const camTarget = new Vector3();
@@ -399,8 +404,10 @@ export function initCosmos(canvas, { reducedMotion = false } = {}) {
   function update(dt) {
     if (!reducedMotion) {
       time += dt;
-      intro = Math.min(intro + dt / 2.6, 1);
-      dolly = Math.max(dolly - dt / 3.2, 0);
+      if (started) {
+        intro = Math.min(intro + dt / 2.6, 1);
+        dolly = Math.max(dolly - dt / 3.2, 0);
+      }
     }
     // Frame-rate independent easing towards the scroll position and pointer.
     const follow = reducedMotion ? 1 : 1 - Math.pow(0.0025, dt);
@@ -451,6 +458,7 @@ export function initCosmos(canvas, { reducedMotion = false } = {}) {
     const dt = Math.min(elapsed / 1000, 0.05);
     update(dt);
     renderer.render(scene, camera);
+    markFirstFrame();
     quality.sample(elapsed, dt);
   }
 
@@ -459,6 +467,7 @@ export function initCosmos(canvas, { reducedMotion = false } = {}) {
     if (!reducedMotion) return;
     update(0);
     renderer.render(scene, camera);
+    markFirstFrame();
   }
 
   resize();
@@ -479,6 +488,10 @@ export function initCosmos(canvas, { reducedMotion = false } = {}) {
   }
 
   return {
+    firstFrame,
+    begin() {
+      started = true;
+    },
     setStops(next) {
       if (Array.isArray(next) && next.length >= 2) stops = next;
       drawStill();

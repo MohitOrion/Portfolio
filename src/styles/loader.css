@@ -1,0 +1,109 @@
+/* ---------------------------------------------------------------------------
+   Loading screen: a small black hole with a spinning accretion disk, and a
+   progress bar drawn as a stellar spectrum (same as the nav bar's).
+   Driven by src/ui/loader.js.
+   --------------------------------------------------------------------------- */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 28px;
+  padding-inline: var(--gutter-l) var(--gutter-r);
+  background: radial-gradient(circle at 50% 42%, #0b0d1c, var(--void) 60%);
+  transition: opacity 0.8s ease 0.15s, visibility 0s linear 1s;
+  /* Safety net: if JavaScript never runs, hide the loader after 10 seconds. */
+  animation: loader-failsafe 0.6s ease 10s forwards;
+}
+@keyframes loader-failsafe { to { opacity: 0; visibility: hidden; } }
+
+/* ----- The black hole ----- */
+.loader-hole {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  transition: transform 0.9s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+/* The accretion disk: a spinning conic gradient, squashed into a tilted ellipse. */
+.loader-disk {
+  position: absolute;
+  inset: -55%;
+  transform: rotate(-6deg) scaleY(0.22);
+}
+.loader-disk::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #ffe7c4, #ffb46a 18%, rgba(255, 122, 69, 0.15) 40%, #ff9a4d 62%, #fff1dc 82%, #ffe7c4);
+  /* Cut a hole in the middle so it's a ring: inner edge just outside the shadow. */
+  -webkit-mask: radial-gradient(circle closest-side, transparent 33%, #000 37%, #000 78%, transparent 92%);
+  mask: radial-gradient(circle closest-side, transparent 33%, #000 37%, #000 78%, transparent 92%);
+  filter: blur(1.5px);
+  animation: spin 2.4s linear infinite;
+}
+/* A copy of the disk clipped to its lower half passes *in front of* the shadow. */
+.loader-disk-front { z-index: 3; clip-path: inset(50% 0 0 0); }
+
+.loader-shadow {
+  position: absolute;
+  inset: 24%;
+  z-index: 2;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: 0 0 0 1.5px rgba(255, 222, 180, 0.85), 0 0 22px 4px rgba(255, 170, 90, 0.45), 0 0 60px 10px rgba(255, 140, 70, 0.18);
+}
+
+/* ----- Text and progress ----- */
+.loader-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ion);
+}
+.loader-bar {
+  position: relative;
+  width: min(280px, 70vw);
+  height: 3px;
+  overflow: hidden;
+  background: rgba(160, 172, 222, 0.12);
+  border-radius: 2px;
+}
+.loader-bar span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #6d3cff 0%, #3d6bff 12%, #2fb8ff 24%, #3ef0b0 38%, #c9f04a 50%, #ffe14a 58%, #ffaa3d 70%, #ff5a36 84%, #c0132a 100%);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.6s var(--ease-out);
+}
+.loader-meta {
+  display: flex;
+  justify-content: space-between;
+  width: min(280px, 70vw);
+  margin: -16px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----- Exit: the black hole grows until it swallows the screen, then everything fades ----- */
+.loader.loader-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader.loader-done .loader-hole { transform: scale(14); }
+.loader.loader-done .loader-label,
+.loader.loader-done .loader-bar,
+.loader.loader-done .loader-meta { opacity: 0; transition: opacity 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-disk::before { animation: none; }
+  .loader.loader-done .loader-hole { transform: none; }
+  .loader { transition: opacity 0.3s, visibility 0s linear 0.3s; }
+}

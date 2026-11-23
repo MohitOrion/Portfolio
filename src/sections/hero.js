@@ -12,16 +12,20 @@ function splitLetters(element) {
   for (const letter of text) element.append(h("span", { class: "char", text: letter }));
 }
 
+/**
+ * Prepare the hero. Returns { play() }: call it when the loading screen
+ * leaves, so the name animates in front of the visitor rather than behind it.
+ */
 export function setupHero() {
   splitLetters($(".hero-first"));
   splitLetters($(".hero-last"));
-  scramble($(".hero-eyebrow"), 1200);
 
-  if (!animate) return;
+  if (!animate) return { play() {} };
 
   // Page-load sequence. Everything is visible without JavaScript;
   // these tweens only animate *from* a hidden state into the final one.
-  gsap.timeline({ defaults: { ease: EASE } })
+  // The timeline starts paused and play() runs it.
+  const intro = gsap.timeline({ paused: true, defaults: { ease: EASE } })
     .from(".hero-eyebrow", { opacity: 0, y: 10, duration: 1 }, 0.15)
     .from(".hero-name .char", { yPercent: 34, opacity: 0, filter: "blur(18px)", duration: 1.6, stagger: 0.065, clearProps: "filter" }, 0.3)
     .from(".nav-inner", { opacity: 0, y: -14, duration: 1.2 }, 0.5)
@@ -34,4 +38,11 @@ export function setupHero() {
   gsap.to(".hero-name", { yPercent: -28, opacity: 0.15, ease: "none", scrollTrigger: scrollOut });
   gsap.to([".hero-eyebrow", ".hero-role", ".hero-sub", ".hero-cta"], { y: -60, opacity: 0, ease: "none", scrollTrigger: scrollOut });
   gsap.to(".hud", { opacity: 0, ease: "none", scrollTrigger: { ...scrollOut, end: "30% top" } });
+
+  return {
+    play() {
+      intro.play();
+      scramble($(".hero-eyebrow"), 1200);
+    },
+  };
 }

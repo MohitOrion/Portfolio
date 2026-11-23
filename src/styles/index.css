@@ -2,6 +2,7 @@
    in the same order the parts appear. Vite bundles them into one file. */
 @import "./tokens.css";
 @import "./base.css";
+@import "./loader.css";
 @import "./nav.css";
 @import "./hero.css";
 @import "./plates.css";
