@@ -18,8 +18,8 @@ export const PROFILE = {
 
 export const SOCIALS = [
   { id: "github", label: "GitHub", handle: "MohitOrion", href: "https://github.com/MohitOrion" },
-  { id: "linkedin", label: "LinkedIn", handle: "mohit-68a7043ba", href: "https://www.linkedin.com/in/mohit-68a7043ba" },
-  { id: "leetcode", label: "LeetCode", handle: "Mohit5464", href: "https://leetcode.com/u/Mohit5464" },
+  { id: "linkedin", label: "LinkedIn", handle: "mohitrai", href: "https://www.linkedin.com/in/mohitrai" },
+  { id: "leetcode", label: "LeetCode", handle: "MohitOrion", href: "https://leetcode.com/u/MohitOrion" },
   { id: "instagram", label: "Instagram", handle: "mohitroyfbd", href: "https://instagram.com/mohitroyfbd" },
   { id: "discord", label: "Discord", handle: "mohitorion", href: "https://discord.gg/mohitorion" },
 ];
